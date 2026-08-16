@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { ArrowRight, Star } from "lucide-react";
-import { testimonials, galleryImages } from "@/lib/sac-data";
+import { useCampus } from "@/hooks/useCampus";
 import { motion } from "framer-motion";
 
 export function VoicesAndGallerySection() {
+  const { campus } = useCampus();
   const [activeDot, setActiveDot] = useState(0);
-  const displayGallery = galleryImages.slice(0, 7);
+  const displayGallery = (campus.gallery || []).slice(0, 7);
+  const displayTestimonials = campus.testimonials || [];
 
   return (
     <section id="voices-gallery" className="relative bg-[#FAFAF8] py-16 md:py-20 border-b border-[#EAE6DF]">
@@ -31,11 +33,11 @@ export function VoicesAndGallerySection() {
                 Real stories. Real impact.
               </p>
 
-              {/* 3 Testimonial Cards */}
+              {/* Testimonial Cards */}
               <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                {testimonials.map((t, idx) => (
+                {displayTestimonials.slice(0, 3).map((t, idx) => (
                   <div
-                    key={t.name}
+                    key={`${t.name}-${idx}`}
                     className="relative flex flex-col justify-between rounded-2xl border border-slate-200/90 bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-md hover:-translate-y-1"
                   >
                     <div className="flex items-center gap-2.5">

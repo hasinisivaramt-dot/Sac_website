@@ -1,16 +1,7 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import { motion, type Variants } from "framer-motion";
-import clubPhotography from "@/assets/club-photography.jpg";
-import clubDance from "@/assets/club-dance.jpg";
-import clubMusic from "@/assets/club-music.jpg";
-import clubArts from "@/assets/club-arts.jpg";
-import clubFashion from "@/assets/club-fashion.jpg";
-import eventInauguration from "@/assets/event-inauguration.jpg";
-import eventCultural from "@/assets/event-cultural.jpg";
-import galleryMusic from "@/assets/gallery-music.jpg";
-import galleryWorkshop from "@/assets/gallery-workshop.jpg";
-import galleryCelebration from "@/assets/gallery-celebration.jpg";
+import { useCampus } from "@/hooks/useCampus";
 import { cn } from "@/lib/utils";
 
 const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
@@ -21,83 +12,25 @@ interface MasonryItem {
   aspectClass: string;
 }
 
-// 5 Asymmetric Editorial Columns for Desktop / Tablet / Mobile
-const masonryColumns: { offsetClass: string; items: MasonryItem[] }[] = [
-  {
-    offsetClass: "pt-0",
-    items: [
-      {
-        src: eventCultural,
-        alt: "Cultural festival crowd celebrating at night",
-        aspectClass: "aspect-[4/3]",
-      },
-      {
-        src: clubArts,
-        alt: "Student artwork and painting showcase",
-        aspectClass: "aspect-[3/4]",
-      },
-    ],
-  },
-  {
-    offsetClass: "pt-4 sm:pt-8 md:pt-12 lg:pt-14",
-    items: [
-      {
-        src: galleryMusic,
-        alt: "Live campus music concert performance",
-        aspectClass: "aspect-[9/13]",
-      },
-      {
-        src: clubPhotography,
-        alt: "Student photographer capturing campus moments",
-        aspectClass: "aspect-[4/3]",
-      },
-    ],
-  },
-  {
-    offsetClass: "pt-0 lg:pt-2",
-    items: [
-      {
-        src: galleryCelebration,
-        alt: "Students celebrating outdoor milestone on campus",
-        aspectClass: "aspect-[3/4]",
-      },
-      {
-        src: clubFashion,
-        alt: "Student fashion show runway production",
-        aspectClass: "aspect-[16/11]",
-      },
-    ],
-  },
-  {
-    offsetClass: "pt-3 sm:pt-6 md:pt-10 lg:pt-16",
-    items: [
-      {
-        src: clubDance,
-        alt: "Student dance performance on main auditorium stage",
-        aspectClass: "aspect-[4/3]",
-      },
-      {
-        src: galleryWorkshop,
-        alt: "Students painting collaborative campus mural in art workshop",
-        aspectClass: "aspect-[3/4]",
-      },
-    ],
-  },
-  {
-    offsetClass: "pt-2 sm:pt-4 md:pt-8 lg:pt-6",
-    items: [
-      {
-        src: clubMusic,
-        alt: "Student performing live music on guitar",
-        aspectClass: "aspect-[3/4]",
-      },
-      {
-        src: eventInauguration,
-        alt: "Inauguration ceremony in the university auditorium",
-        aspectClass: "aspect-[16/11]",
-      },
-    ],
-  },
+const columnOffsets = [
+  "pt-0",
+  "pt-4 sm:pt-8 md:pt-12 lg:pt-14",
+  "pt-0 lg:pt-2",
+  "pt-3 sm:pt-6 md:pt-10 lg:pt-16",
+  "pt-2 sm:pt-4 md:pt-8 lg:pt-6",
+];
+
+const defaultAspects = [
+  "aspect-[4/3]",
+  "aspect-[3/4]",
+  "aspect-[9/13]",
+  "aspect-[4/3]",
+  "aspect-[3/4]",
+  "aspect-[16/11]",
+  "aspect-[4/3]",
+  "aspect-[3/4]",
+  "aspect-[3/4]",
+  "aspect-[16/11]",
 ];
 
 const containerVariants: Variants = {
@@ -129,6 +62,34 @@ const itemVariants: Variants = {
 };
 
 export function GallerySection() {
+  const { campus } = useCampus();
+  const galleryItems = campus.gallery || [];
+
+  // Build 5 dynamic columns from campus gallery
+  const masonryColumns: { offsetClass: string; items: MasonryItem[] }[] = columnOffsets.map(
+    (offsetClass, colIdx) => {
+      const firstIdx = colIdx * 2;
+      const secondIdx = colIdx * 2 + 1;
+      const items: MasonryItem[] = [];
+
+      if (galleryItems[firstIdx]) {
+        items.push({
+          src: galleryItems[firstIdx].src,
+          alt: galleryItems[firstIdx].alt,
+          aspectClass: galleryItems[firstIdx].aspectClass || defaultAspects[firstIdx % defaultAspects.length],
+        });
+      }
+      if (galleryItems[secondIdx]) {
+        items.push({
+          src: galleryItems[secondIdx].src,
+          alt: galleryItems[secondIdx].alt,
+          aspectClass: galleryItems[secondIdx].aspectClass || defaultAspects[secondIdx % defaultAspects.length],
+        });
+      }
+
+      return { offsetClass, items };
+    }
+  );
   return (
     <section
       id="gallery"

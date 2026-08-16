@@ -1,0 +1,224 @@
+import React, { useState } from "react";
+import { ArrowRight } from "lucide-react";
+import { motion, type Variants } from "framer-motion";
+import { useCampus } from "@/hooks/useCampus";
+import { cn } from "@/lib/utils";
+import { GalleryLightbox } from "./GalleryLightbox";
+
+const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
+
+interface MasonryItem {
+  src: string;
+  alt: string;
+  aspectClass: string;
+}
+
+const columnOffsets = [
+  "pt-0",
+  "pt-4 sm:pt-8 md:pt-12 lg:pt-14",
+  "pt-0 lg:pt-2",
+  "pt-3 sm:pt-6 md:pt-10 lg:pt-16",
+  "pt-2 sm:pt-4 md:pt-8 lg:pt-6",
+];
+
+const defaultAspects = [
+  "aspect-[4/3]",
+  "aspect-[3/4]",
+  "aspect-[9/13]",
+  "aspect-[4/3]",
+  "aspect-[3/4]",
+  "aspect-[16/11]",
+  "aspect-[4/3]",
+  "aspect-[3/4]",
+  "aspect-[3/4]",
+  "aspect-[16/11]",
+];
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.08,
+      delayChildren: 0.15,
+    },
+  },
+};
+
+const itemVariants: Variants = {
+  hidden: {
+    opacity: 0,
+    y: 24,
+    scale: 0.96,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      duration: 0.75,
+      ease: EASE_PREMIUM,
+    },
+  },
+};
+
+export function GallerySection() {
+  const { campus } = useCampus();
+  const galleryItems = campus.gallery || [];
+
+  if (galleryItems.length === 0) {
+    return null;
+  }
+
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  // Build 5 dynamic columns from campus gallery
+  const masonryColumns: { offsetClass: string; items: { item: MasonryItem; globalIdx: number }[] }[] = columnOffsets.map(
+    (offsetClass, colIdx) => {
+      const firstIdx = colIdx * 2;
+      const secondIdx = colIdx * 2 + 1;
+      const items: { item: MasonryItem; globalIdx: number }[] = [];
+
+      if (galleryItems[firstIdx]) {
+        items.push({
+          item: {
+            src: galleryItems[firstIdx].src,
+            alt: galleryItems[firstIdx].alt,
+            aspectClass: galleryItems[firstIdx].aspectClass || defaultAspects[firstIdx % defaultAspects.length] || "aspect-[4/3]",
+          },
+          globalIdx: firstIdx,
+        });
+      }
+      if (galleryItems[secondIdx]) {
+        items.push({
+          item: {
+            src: galleryItems[secondIdx].src,
+            alt: galleryItems[secondIdx].alt,
+            aspectClass: galleryItems[secondIdx].aspectClass || defaultAspects[secondIdx % defaultAspects.length] || "aspect-[4/3]",
+          },
+          globalIdx: secondIdx,
+        });
+      }
+
+      return { offsetClass, items };
+    }
+  );
+
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
+  return (
+    <section
+      id="gallery"
+      className="relative overflow-hidden bg-[#FAFAF8] py-16 sm:py-20 md:py-24 border-b border-[#EAE6DF]"
+    >
+      {/* Subtle Ambient Background Glow */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 h-[32rem] w-[65rem] rounded-full bg-[radial-gradient(circle,rgba(201,154,61,0.06),transparent_70%)] blur-3xl" />
+      </div>
+
+      <div className="w-[94vw] max-w-[1560px] mx-auto px-2 sm:px-4">
+        {/* Editorial Header */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.65, ease: EASE_PREMIUM }}
+          className="flex flex-col items-center text-center select-none"
+        >
+          <div className="flex items-center gap-3">
+            <span className="h-px w-10 sm:w-14 bg-[#C99A3D]" />
+            <h2 className="font-display text-3xl sm:text-4xl md:text-[2.65rem] font-extrabold text-[#6D0826] tracking-tight">
+              Gallery
+            </h2>
+            <span className="h-px w-10 sm:w-14 bg-[#C99A3D]" />
+          </div>
+
+          <p className="mt-2 text-xs sm:text-sm font-semibold uppercase tracking-[0.24em] text-[#C99A3D]">
+            Moments that define us
+          </p>
+        </motion.div>
+
+        {/* Asymmetric Masonry Editorial Wall */}
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, amount: 0.15 }}
+          className="mt-12 sm:mt-16 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4 md:gap-5 lg:gap-6 items-start"
+        >
+          {masonryColumns.map((col, colIdx) => (
+            <div
+              key={colIdx}
+              className={cn(
+                "flex flex-col gap-3.5 sm:gap-4 md:gap-5 lg:gap-6",
+                col.offsetClass,
+                colIdx === 4 ? "col-span-2 sm:col-span-1 md:hidden lg:flex" : "col-span-1"
+              )}
+            >
+              {col.items.map(({ item, globalIdx }) => (
+                <motion.div
+                  key={globalIdx}
+                  variants={itemVariants}
+                  onClick={() => openLightbox(globalIdx)}
+                  className="group relative overflow-hidden rounded-[1.25rem] sm:rounded-[1.35rem] md:rounded-[1.5rem] bg-slate-900 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.12)] cursor-pointer"
+                >
+                  <div className={cn("relative w-full overflow-hidden", item.aspectClass)}>
+                    <img
+                      src={item.src}
+                      alt={item.alt}
+                      loading="lazy"
+                      decoding="async"
+                      className="h-full w-full object-cover object-center transition-transform duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.03]"
+                    />
+
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/75 via-black/15 to-transparent opacity-0 transition-opacity duration-400 group-hover:opacity-90" />
+
+                    <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 text-white opacity-0 translate-y-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0">
+                      <p className="text-[11px] sm:text-xs font-semibold leading-tight line-clamp-1 text-amber-200/95">
+                        {item.alt}
+                      </p>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          ))}
+        </motion.div>
+
+        {/* View More Photos CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 15 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.55, delay: 0.35, ease: EASE_PREMIUM }}
+          className="mt-12 sm:mt-16 flex justify-center"
+        >
+          <a
+            href="#gallery"
+            className="group inline-flex items-center gap-2.5 rounded-xl bg-[#6D0826] px-8 py-3 text-xs sm:text-sm font-bold text-white shadow-md hover:bg-[#430518] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 border border-white/10"
+          >
+            <span>View More Photos</span>
+            <ArrowRight
+              size={15}
+              className="text-[#C99A3D] transition-transform duration-200 group-hover:translate-x-1"
+            />
+          </a>
+        </motion.div>
+      </div>
+
+      <GalleryLightbox
+        images={galleryItems}
+        currentIndex={lightboxIndex}
+        isOpen={lightboxOpen}
+        onClose={() => setLightboxOpen(false)}
+        onPrev={() => setLightboxIndex((prev) => (prev > 0 ? prev - 1 : galleryItems.length - 1))}
+        onNext={() => setLightboxIndex((prev) => (prev < galleryItems.length - 1 ? prev + 1 : 0))}
+      />
+    </section>
+  );
+}

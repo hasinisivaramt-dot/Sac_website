@@ -1,6 +1,6 @@
 import React from "react";
 import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, Youtube } from "lucide-react";
-import { clubNames } from "@/lib/sac-data";
+import { useCampus } from "@/hooks/useCampus";
 
 const quickLinks = [
   "Home",
@@ -22,6 +22,15 @@ const socials = [
 ];
 
 export function Footer() {
+  const { campus } = useCampus();
+  const displayClubs = campus.clubs || [];
+  const contact = campus.contact || {
+    phone: "+91 40 2354 4444",
+    email: "sac@kluniversity.in",
+    address: "KLH Campus, Aziz Nagar, Hyderabad, Telangana, India",
+    location: "Aziz Nagar, Hyderabad, Telangana",
+  };
+
   return (
     <footer className="bg-[#12151A] text-white">
       <div className="section-shell grid gap-12 py-16 md:grid-cols-2 md:py-20 lg:grid-cols-4">
@@ -84,13 +93,13 @@ export function Footer() {
             Clubs
           </h3>
           <ul className="mt-5 space-y-2.5">
-            {clubNames.map((club) => (
-              <li key={club}>
+            {displayClubs.map((club, idx) => (
+              <li key={`${club.name}-${idx}`}>
                 <a
                   href="#clubs"
                   className="text-sm text-slate-300 transition-colors duration-200 hover:text-[#C99A3D]"
                 >
-                  {club}
+                  {club.name}
                 </a>
               </li>
             ))}
@@ -105,15 +114,15 @@ export function Footer() {
           <ul className="mt-5 space-y-4 text-sm text-slate-300">
             <li className="flex gap-3">
               <Phone size={16} className="mt-0.5 shrink-0 text-[#C99A3D]" />
-              <span>+91 40 2354 4444</span>
+              <span>{contact.phone}</span>
             </li>
             <li className="flex gap-3">
               <Mail size={16} className="mt-0.5 shrink-0 text-[#C99A3D]" />
-              <span className="break-all">sac@kluniversity.in</span>
+              <span className="break-all">{contact.email}</span>
             </li>
             <li className="flex gap-3">
               <MapPin size={16} className="mt-0.5 shrink-0 text-[#C99A3D]" />
-              <span>KLH Campus, Aziz Nagar, Hyderabad, Telangana, India</span>
+              <span>{contact.address || contact.location}</span>
             </li>
           </ul>
         </div>

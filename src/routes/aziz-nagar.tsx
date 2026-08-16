@@ -21,7 +21,7 @@ function AzizNagarPage() {
   const { setCampus } = useCampus();
 
   useEffect(() => {
-    setCampus("aziznagar");
+    setCampus("aziz-nagar");
   }, [setCampus]);
 
   return <LandingPage />;

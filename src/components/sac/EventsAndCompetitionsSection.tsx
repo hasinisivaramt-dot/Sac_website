@@ -1,11 +1,12 @@
 import React from "react";
 import { ArrowRight, MapPin } from "lucide-react";
-import { events, competitions } from "@/lib/sac-data";
+import { useCampus } from "@/hooks/useCampus";
 import { motion } from "framer-motion";
 
 export function EventsAndCompetitionsSection() {
-  const displayEvents = events.slice(0, 3);
-  const displayCompetitions = competitions.slice(0, 3);
+  const { campus } = useCampus();
+  const displayEvents = (campus.events || []).slice(0, 3);
+  const displayCompetitions = (campus.competitions || []).slice(0, 3);
 
   return (
     <section id="events-competitions" className="relative bg-white py-16 md:py-20 border-b border-[#EAE6DF]">

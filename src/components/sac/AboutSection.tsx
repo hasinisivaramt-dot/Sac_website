@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { ArrowRight, Users, HeartHandshake, TrendingUp, Star } from "lucide-react";
 import aboutImg from "@/assets/about-collaboration.jpg";
+import { useCampus } from "@/hooks/useCampus";
 import {
   motion,
   useReducedMotion,
@@ -13,7 +14,7 @@ const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
 const EASE_DRIBBBLE = [0.77, 0, 0.175, 1] as const;
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
-const aboutPillars = [
+const defaultPillars = [
   {
     icon: Users,
     title: "Student-Led",
@@ -37,6 +38,7 @@ const aboutPillars = [
 ];
 
 export function AboutSection() {
+  const { campus } = useCampus();
   const prefersReducedMotion = useReducedMotion();
   const cardRef = useRef<HTMLDivElement>(null);
 
@@ -192,7 +194,7 @@ export function AboutSection() {
                 viewport={{ once: true, amount: 0.3 }}
                 className="text-xs font-black uppercase text-[#C99A3D]"
               >
-                ABOUT US
+                {campus.about?.label || "ABOUT US"}
               </motion.span>
             </div>
 
@@ -206,8 +208,21 @@ export function AboutSection() {
                   viewport={{ once: true, amount: 0.3 }}
                   className="font-display text-5xl sm:text-6xl md:text-7xl lg:text-[4.75rem] font-extrabold text-[#6D0826] tracking-tight leading-[0.96]"
                 >
-                  About <br />
-                  SAC
+                  {campus.about?.title ? (
+                    campus.about.title.includes(" ") ? (
+                      <>
+                        {campus.about.title.split(" ")[0]} <br />
+                        {campus.about.title.split(" ").slice(1).join(" ")}
+                      </>
+                    ) : (
+                      campus.about.title
+                    )
+                  ) : (
+                    <>
+                      About <br />
+                      SAC
+                    </>
+                  )}
                 </motion.h2>
               </div>
 
@@ -223,9 +238,8 @@ export function AboutSection() {
               viewport={{ once: true, amount: 0.3 }}
               className="max-w-xl text-base sm:text-lg font-normal leading-relaxed text-[#5A555C]"
             >
-              The Student Activity Centre (SAC) is the heart of student life on
-              campus. We empower students to lead, collaborate, and create
-              meaningful impact through diverse activities and initiatives.
+              {campus.about?.description ||
+                "The Student Activity Centre (SAC) is the heart of student life on campus. We empower students to lead, collaborate, and create meaningful impact through diverse activities and initiatives."}
             </motion.p>
 
             {/* Step 4: Rounded Burgundy Pill "Know More →" Button */}
@@ -277,8 +291,8 @@ export function AboutSection() {
                 className="relative w-full aspect-[16/10.5] sm:aspect-[16/10] flex items-center justify-center scale-[1.03] transition-transform duration-300 ease-out"
               >
                 <img
-                  src={aboutImg}
-                  alt="Uniting Students & Faculty - Collaboration, Ideas, Growth, Community"
+                  src={campus.about?.image || aboutImg}
+                  alt={`${campus.name} - Uniting Students & Faculty`}
                   loading="lazy"
                   decoding="async"
                   className="h-full w-full object-contain object-center pointer-events-none"

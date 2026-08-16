@@ -1,82 +1,114 @@
 import React, { createContext, useContext, useState, useEffect, useMemo, type ReactNode } from "react";
-import { campuses, campusList, DEFAULT_CAMPUS_ID, type CampusInfo } from "@/data/campusData";
-import { clubsByCampus, type ClubItem } from "@/data/clubsData";
-import { eventsByCampus, type EventItem } from "@/data/eventsData";
-import { activitiesByCampus, type ActivityItem } from "@/data/activitiesData";
-import { galleryByCampus, type GalleryItem } from "@/data/galleryData";
-import { principalData, type PrincipalInfo } from "@/data/principalData";
+import {
+  campuses,
+  campusList,
+  DEFAULT_CAMPUS,
+  type CampusData,
+  type CampusId,
+} from "@/data/campusConfig";
 
-export type CampusId = "aziznagar" | "bachupally" | "gbs";
+export type { CampusData, CampusId };
 
 interface CampusContextType {
+  campus: CampusData;
+  selectedCampus: CampusId;
+  setSelectedCampus: (id: CampusId | string) => void;
+  // Aliases for seamless compatibility across components
   campusId: CampusId;
-  campus: CampusInfo;
-  setCampus: (id: CampusId) => void;
-  clubs: ClubItem[];
-  events: EventItem[];
-  activities: ActivityItem[];
-  gallery: GalleryItem[];
-  principal: PrincipalInfo;
-  allCampuses: CampusInfo[];
-  getCampusUrl: (path?: string) => string;
+  setCampus: (id: CampusId | string) => void;
+  allCampuses: typeof campusList;
+  clubs: CampusData["clubs"];
+  events: CampusData["events"];
+  gallery: CampusData["gallery"];
+  visionaries: CampusData["visionaries"];
+  competitions: CampusData["competitions"];
+  achievements: CampusData["achievements"];
+  statistics: CampusData["statistics"];
+  impactStats: CampusData["impactStats"];
+  contact: CampusData["contact"];
   isCampusModalOpen: boolean;
   openCampusModal: () => void;
   closeCampusModal: () => void;
+  getCampusUrl: (path?: string) => string;
 }
 
 const CampusContext = createContext<CampusContextType | undefined>(undefined);
+
+function normalizeCampusId(id?: string | null): CampusId {
+  if (!id) return DEFAULT_CAMPUS;
+  const clean = id.toLowerCase().trim();
+  if (clean === "aziznagar" || clean === "aziz-nagar") return "aziz-nagar";
+  if (clean === "bachupally") return "bachupally";
+  if (clean === "gbs") return "gbs";
+  return DEFAULT_CAMPUS;
+}
 
 export function CampusProvider({
   children,
   initialCampusId,
 }: {
   children: ReactNode;
-  initialCampusId?: CampusId;
+  initialCampusId?: string;
 }) {
-  const [campusId, setCampusIdState] = useState<CampusId>(() => {
-    if (initialCampusId && campuses[initialCampusId]) {
-      return initialCampusId;
+  const [selectedCampus, setSelectedCampusState] = useState<CampusId>(() => {
+    if (initialCampusId) {
+      return normalizeCampusId(initialCampusId);
     }
     if (typeof window !== "undefined") {
       // Check pathname first
       const pathParts = window.location.pathname.split("/").filter(Boolean);
       const firstPart = pathParts[0]?.toLowerCase();
-      if (firstPart && (firstPart === "aziznagar" || firstPart === "bachupally" || firstPart === "gbs")) {
-        return firstPart as CampusId;
+      if (
+        firstPart === "aziz-nagar" ||
+        firstPart === "aziznagar" ||
+        firstPart === "bachupally" ||
+        firstPart === "gbs"
+      ) {
+        return normalizeCampusId(firstPart);
       }
       // Check localStorage
-      const saved = localStorage.getItem("klu_sac_selected_campus");
-      if (saved && (saved === "aziznagar" || saved === "bachupally" || saved === "gbs")) {
-        return saved as CampusId;
+      try {
+        const saved = localStorage.getItem("klu_sac_selected_campus");
+        if (saved) {
+          return normalizeCampusId(saved);
+        }
+      } catch {
+        // ignore localStorage restricted errors
       }
     }
-    return DEFAULT_CAMPUS_ID;
+    return DEFAULT_CAMPUS;
   });
 
   const [isCampusModalOpen, setIsCampusModalOpen] = useState(false);
 
-  // Sync with URL pathname changes
+  // Sync with browser navigation
   useEffect(() => {
     const handleLocationChange = () => {
       const pathParts = window.location.pathname.split("/").filter(Boolean);
       const firstPart = pathParts[0]?.toLowerCase();
-      if (firstPart && (firstPart === "aziznagar" || firstPart === "bachupally" || firstPart === "gbs")) {
-        if (firstPart !== campusId) {
-          setCampusIdState(firstPart as CampusId);
+      if (
+        firstPart === "aziz-nagar" ||
+        firstPart === "aziznagar" ||
+        firstPart === "bachupally" ||
+        firstPart === "gbs"
+      ) {
+        const normalized = normalizeCampusId(firstPart);
+        if (normalized !== selectedCampus) {
+          setSelectedCampusState(normalized);
         }
       }
     };
 
     window.addEventListener("popstate", handleLocationChange);
     return () => window.removeEventListener("popstate", handleLocationChange);
-  }, [campusId]);
+  }, [selectedCampus]);
 
-  const setCampus = (id: CampusId) => {
-    if (!campuses[id]) return;
-    setCampusIdState(id);
+  const setSelectedCampus = (id: CampusId | string) => {
+    const validId = normalizeCampusId(id);
+    setSelectedCampusState(validId);
     if (typeof window !== "undefined") {
       try {
-        localStorage.setItem("klu_sac_selected_campus", id);
+        localStorage.setItem("klu_sac_selected_campus", validId);
       } catch {
         // ignore
       }
@@ -86,43 +118,39 @@ export function CampusProvider({
   const openCampusModal = () => setIsCampusModalOpen(true);
   const closeCampusModal = () => setIsCampusModalOpen(false);
 
-  const validCampusId: CampusId =
-    campusId === "aziznagar" || campusId === "bachupally" || campusId === "gbs"
-      ? campusId
-      : DEFAULT_CAMPUS_ID;
-
-  const campus = campuses[validCampusId];
-  const clubs = clubsByCampus[validCampusId] || clubsByCampus[DEFAULT_CAMPUS_ID] || [];
-  const events = eventsByCampus[validCampusId] || eventsByCampus[DEFAULT_CAMPUS_ID] || [];
-  const activities = activitiesByCampus[validCampusId] || activitiesByCampus[DEFAULT_CAMPUS_ID] || [];
-  const gallery = galleryByCampus[validCampusId] || galleryByCampus[DEFAULT_CAMPUS_ID] || [];
-  const principal = principalData[validCampusId] || principalData[DEFAULT_CAMPUS_ID];
+  const campus: CampusData = campuses[selectedCampus] || campuses[DEFAULT_CAMPUS];
 
   const getCampusUrl = (path: string = "") => {
     const cleanPath = path.startsWith("/") ? path : `/${path}`;
     if (cleanPath === "/" || cleanPath === "") {
-      return `/${campusId}`;
+      return `/${selectedCampus}`;
     }
-    return `/${campusId}${cleanPath}`;
+    return `/${selectedCampus}${cleanPath}`;
   };
 
   const value = useMemo(
     () => ({
-      campusId,
       campus,
-      setCampus,
-      clubs,
-      events,
-      activities,
-      gallery,
-      principal,
+      selectedCampus,
+      setSelectedCampus,
+      campusId: selectedCampus,
+      setCampus: setSelectedCampus,
       allCampuses: campusList,
-      getCampusUrl,
+      clubs: campus.clubs,
+      events: campus.events,
+      gallery: campus.gallery,
+      visionaries: campus.visionaries,
+      competitions: campus.competitions,
+      achievements: campus.achievements,
+      statistics: campus.statistics,
+      impactStats: campus.impactStats,
+      contact: campus.contact,
       isCampusModalOpen,
       openCampusModal,
       closeCampusModal,
+      getCampusUrl,
     }),
-    [campusId, campus, clubs, events, activities, gallery, principal, isCampusModalOpen]
+    [selectedCampus, campus, isCampusModalOpen]
   );
 
   return <CampusContext.Provider value={value}>{children}</CampusContext.Provider>;

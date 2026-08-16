@@ -2,6 +2,8 @@ import React, { useRef, useState, useEffect } from "react";
 import { ArrowRight, Trophy } from "lucide-react";
 import achievementsImg from "@/assets/achievements.jpg";
 import eventTalent from "@/assets/event-talent.jpg";
+import { useCampus } from "@/hooks/useCampus";
+import type { AchievementStat } from "@/data/types";
 import {
   motion,
   useInView,
@@ -66,7 +68,7 @@ function OdometerCounter({
 // ---------------------------------------------------------------------------
 // STATS DATA (01, 02, 03, 04)
 // ---------------------------------------------------------------------------
-const stats = [
+const defaultStats: AchievementStat[] = [
   { index: "01", value: 50, suffix: "+", label: "Awards Won" },
   { index: "02", value: 25, suffix: "+", label: "Competitions" },
   { index: "03", value: 10, suffix: "+", label: "National Recognitions" },
@@ -80,7 +82,7 @@ function StatBlockItem({
   stat,
   idx,
 }: {
-  stat: (typeof stats)[number];
+  stat: AchievementStat;
   idx: number;
 }) {
   const prefersReducedMotion = useReducedMotion();
@@ -199,6 +201,7 @@ function StatBlockItem({
 // MAIN ACHIEVEMENTS SECTION COMPONENT
 // ---------------------------------------------------------------------------
 export function AchievementsSection() {
+  const { campus } = useCampus();
   const sectionRef = useRef<HTMLElement>(null);
   const mainImageRef = useRef<HTMLDivElement>(null);
   const statsSectionRef = useRef<HTMLDivElement>(null);
@@ -206,6 +209,10 @@ export function AchievementsSection() {
 
   const [shiftX, setShiftX] = useState(0);
   const [isHovering, setIsHovering] = useState(false);
+
+  const achievementStatsList = campus.achievements?.stats || defaultStats;
+  const mainAchieveImg = campus.achievements?.image || achievementsImg;
+  const secondaryAchieveImg = campus.achievements?.talentImage || eventTalent;
 
   // Scroll depth parallax
   const { scrollYProgress } = useScroll({
@@ -573,8 +580,8 @@ export function AchievementsSection() {
                   className="h-full w-full"
                 >
                   <img
-                    src={achievementsImg}
-                    alt="KLH student achievers celebrating victory with golden trophy"
+                    src={mainAchieveImg}
+                    alt={`${campus.name} student achievers celebrating victory with trophy`}
                     loading="lazy"
                     decoding="async"
                     className="h-full w-full object-cover object-center transition-[filter] duration-500 group-hover:contrast-[1.03]"
@@ -635,8 +642,8 @@ export function AchievementsSection() {
                 className="absolute -bottom-2 sm:-bottom-4 -right-1 sm:-right-3 w-40 sm:w-48 md:w-56 aspect-[4/3] overflow-hidden rounded-2xl bg-slate-900 shadow-[0_20px_45px_-12px_rgba(0,0,0,0.35)] border-3 border-white ring-2 ring-[#C99A3D]/40 group transition-transform duration-400 hover:-translate-y-1.5 hover:scale-[1.02] cursor-pointer select-none"
               >
                 <img
-                  src={eventTalent}
-                  alt="Student holding champion trophy with confetti"
+                  src={secondaryAchieveImg}
+                  alt={`${campus.name} student holding champion trophy`}
                   loading="lazy"
                   decoding="async"
                   className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
@@ -700,8 +707,8 @@ export function AchievementsSection() {
           </div>
 
           <div className="grid grid-cols-2 gap-y-10 gap-x-6 sm:gap-8 md:grid-cols-4 lg:gap-10">
-            {stats.map((stat, idx) => (
-              <StatBlockItem key={stat.label} stat={stat} idx={idx} />
+            {achievementStatsList.map((stat, idx) => (
+              <StatBlockItem key={`${stat.label}-${idx}`} stat={stat} idx={idx} />
             ))}
           </div>
         </motion.div>

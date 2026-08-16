@@ -69,15 +69,20 @@ export function CampusSelectorModal() {
 
             {/* Campuses Grid */}
             <div className="mt-6 grid gap-4 md:grid-cols-3">
-              {allCampuses.map((c) => {
-                const isSelected = c.id === campusId;
+              {allCampuses.map((item) => {
+                const cId = item.id;
+                const isSelected = cId === campusId;
+                const cName = item.name;
+                const badge = cId === "aziz-nagar" ? "Main Campus" : cId === "bachupally" ? "Engineering Campus" : "Management & Enterprise";
+                const tagline = cId === "aziz-nagar" ? "Flagship campus for engineering, sciences, arts, and leadership." : cId === "bachupally" ? "Premier technology and computational innovation campus." : "School of Global Business, Leadership & Enterprise.";
+                const location = cId === "aziz-nagar" ? "Aziz Nagar, Hyderabad" : cId === "bachupally" ? "Bachupally, Hyderabad" : "Bowrampet / Hyderabad";
 
                 return (
                   <motion.div
-                    key={c.id}
+                    key={cId}
                     whileHover={{ y: -4 }}
                     transition={{ duration: 0.2 }}
-                    onClick={() => handleSelectCampus(c.id as CampusId)}
+                    onClick={() => handleSelectCampus(cId as CampusId)}
                     className={cn(
                       "group relative flex flex-col justify-between overflow-hidden rounded-2xl border p-5 cursor-pointer transition-all duration-300",
                       isSelected
@@ -87,7 +92,7 @@ export function CampusSelectorModal() {
                   >
                     {/* Active Checkmark Pill */}
                     {isSelected && (
-                      <div className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#650B25] text-white shadow">
+                      <div className="absolute right-3 top-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#6D0826] text-white shadow">
                         <Check className="h-3.5 w-3.5 stroke-[3]" />
                       </div>
                     )}
@@ -95,44 +100,29 @@ export function CampusSelectorModal() {
                     <div>
                       {/* Badge */}
                       <span className="inline-block text-[0.65rem] font-extrabold uppercase tracking-wider text-[#C99A3D]">
-                        {c.badge}
+                        {badge}
                       </span>
 
                       {/* Title */}
-                      <h4 className="mt-1 font-display text-lg font-black text-slate-900 group-hover:text-[#650B25] transition-colors">
-                        {c.name}
+                      <h4 className="mt-1 font-display text-lg font-black text-slate-900 group-hover:text-[#6D0826] transition-colors">
+                        {cName}
                       </h4>
 
                       {/* Tagline */}
                       <p className="mt-2 text-xs leading-relaxed text-slate-600 line-clamp-2">
-                        {c.tagline}
+                        {tagline}
                       </p>
 
                       {/* Location */}
                       <div className="mt-3 flex items-center gap-1.5 text-xs text-slate-500">
                         <MapPin className="h-3.5 w-3.5 text-[#C99A3D] shrink-0" />
-                        <span className="truncate">{c.location}</span>
+                        <span className="truncate">{location}</span>
                       </div>
                     </div>
 
                     {/* Stats strip */}
                     <div className="mt-5 border-t border-slate-100 pt-3">
-                      <div className="grid grid-cols-2 gap-2 text-center text-xs">
-                        <div className="rounded-lg bg-slate-50 p-1.5">
-                          <span className="block font-display font-extrabold text-[#650B25]">
-                            {c.stats[0]?.value}
-                          </span>
-                          <span className="text-[0.65rem] text-slate-500">{c.stats[0]?.label}</span>
-                        </div>
-                        <div className="rounded-lg bg-slate-50 p-1.5">
-                          <span className="block font-display font-extrabold text-[#650B25]">
-                            {c.stats[1]?.value}
-                          </span>
-                          <span className="text-[0.65rem] text-slate-500">{c.stats[1]?.label}</span>
-                        </div>
-                      </div>
-
-                      <div className="mt-3 flex items-center justify-between text-xs font-bold text-[#650B25] group-hover:text-[#C99A3D] transition-colors">
+                      <div className="mt-1 flex items-center justify-between text-xs font-bold text-[#6D0826] group-hover:text-[#C99A3D] transition-colors">
                         <span>{isSelected ? "Currently Active" : "Switch Campus"}</span>
                         <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                       </div>

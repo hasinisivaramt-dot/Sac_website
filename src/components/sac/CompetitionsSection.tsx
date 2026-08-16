@@ -1,13 +1,14 @@
 import React from "react";
 import { ArrowRight, Trophy } from "lucide-react";
-import { competitions } from "@/lib/sac-data";
+import { useCampus } from "@/hooks/useCampus";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 
 const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
 
 export function CompetitionsSection() {
+  const { campus } = useCampus();
   const prefersReducedMotion = useReducedMotion();
-  const displayCompetitions = competitions.slice(0, 6);
+  const displayCompetitions = (campus.competitions || []).slice(0, 6);
 
   const lineVariants: Variants = {
     hidden: { scaleX: 0, opacity: 0 },

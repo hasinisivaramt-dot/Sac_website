@@ -1,36 +1,21 @@
-import { aziznagarCampus } from "./aziznagar";
+import { azizNagarCampus } from "./aziz-nagar";
 import { bachupallyCampus } from "./bachupally";
 import { gbsCampus } from "./gbs";
+import type { CampusData, CampusId } from "@/types";
 
-export * from "./aziznagar";
+export * from "./aziz-nagar";
 export * from "./bachupally";
 export * from "./gbs";
 
-export type CampusInternalId = "campus01" | "campus02" | "campus03";
-export type CampusSlug = "aziznagar" | "bachupally" | "gbs";
+export const allCampusesList = [azizNagarCampus, bachupallyCampus, gbsCampus];
 
-export const allCampusesList = [aziznagarCampus, bachupallyCampus, gbsCampus];
-
-export const campusesById = {
-  campus01: aziznagarCampus,
-  campus02: bachupallyCampus,
-  campus03: gbsCampus,
-};
-
-export const campusesBySlug = {
-  aziznagar: aziznagarCampus,
-  bachupally: bachupallyCampus,
+export const campuses: Record<string, CampusData> = {
+  "aziz-nagar": azizNagarCampus,
+  "bachupally": bachupallyCampus,
   gbs: gbsCampus,
+  aziznagar: azizNagarCampus,
 };
 
-export const slugToIdMap: Record<CampusSlug, CampusInternalId> = {
-  aziznagar: "campus01",
-  bachupally: "campus02",
-  gbs: "campus03",
-};
-
-export const idToSlugMap: Record<CampusInternalId, CampusSlug> = {
-  campus01: "aziznagar",
-  campus02: "bachupally",
-  campus03: "gbs",
-};
+export const campusesById = campuses;
+export const campusesBySlug = campuses;
+export const DEFAULT_CAMPUS: CampusId = "aziz-nagar";

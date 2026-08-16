@@ -1,6 +1,7 @@
 import React, { useRef, useState } from "react";
 import { ArrowRight, Users } from "lucide-react";
 import councilImg from "@/assets/student-council.jpg";
+import { useCampus } from "@/hooks/useCampus";
 import {
   motion,
   useScroll,
@@ -13,6 +14,7 @@ const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
 export function StudentCouncilSection() {
+  const { campus } = useCampus();
   const sectionRef = useRef<HTMLElement>(null);
   const prefersReducedMotion = useReducedMotion();
   const [isHeadingHovered, setIsHeadingHovered] = useState(false);
@@ -199,8 +201,8 @@ export function StudentCouncilSection() {
               className="max-w-lg text-base sm:text-lg font-normal leading-relaxed text-[#5A555C]"
             >
               <p>
-                The Student Council is the backbone of SAC, working together to
-                represent students, organize events, and bring new ideas to life.
+                {campus.studentCouncil?.description ||
+                  "The Student Council is the backbone of SAC, working together to represent students, organize events, and bring new ideas to life."}
               </p>
             </motion.div>
 
@@ -240,8 +242,8 @@ export function StudentCouncilSection() {
             >
               {/* High-Resolution Photograph */}
               <img
-                src={councilImg}
-                alt="Student Council Members in formal institutional blazers"
+                src={campus.studentCouncil?.image || councilImg}
+                alt={`${campus.name} Student Council Members`}
                 loading="eager"
                 decoding="async"
                 className="h-full w-full object-cover object-center transition-[transform,filter] duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.035] group-hover:contrast-[1.03]"

@@ -1,4 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
+import { useCampus } from "@/hooks/useCampus";
+import type { ImpactStat } from "@/data/types";
 import {
   motion,
   useInView,
@@ -50,9 +52,9 @@ function AnimatedCounter({
 }
 
 // ---------------------------------------------------------------------------
-// IMPACT METRICS
+// DEFAULT IMPACT METRICS
 // ---------------------------------------------------------------------------
-const impactStats = [
+const defaultImpactStats: ImpactStat[] = [
   { value: 9, suffix: "", label: "Active Clubs & Societies" },
   { value: 100, suffix: "+", label: "Events Conducted Annually" },
   { value: 50, suffix: "+", label: "Student Leaders" },
@@ -72,7 +74,9 @@ const particles = [
 ];
 
 export function ImpactSection() {
+  const { campus } = useCampus();
   const prefersReducedMotion = useReducedMotion();
+  const impactStats = campus.impactStats || defaultImpactStats;
 
   return (
     <section

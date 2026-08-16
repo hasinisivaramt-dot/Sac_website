@@ -14,9 +14,9 @@ const links = [
 ];
 
 const campusOptions = [
-  { id: "aziznagar", name: "Aziz Nagar", order: 1 },
-  { id: "bachupally", name: "Bachupally", order: 2 },
-  { id: "gbs", name: "GBS", order: 3 },
+  { id: "aziz-nagar" as CampusId, name: "Aziz Nagar", order: 1 },
+  { id: "bachupally" as CampusId, name: "Bachupally", order: 2 },
+  { id: "gbs" as CampusId, name: "GBS", order: 3 },
 ] as const;
 
 export function Navbar() {
@@ -25,11 +25,13 @@ export function Navbar() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [activeLink, setActiveLink] = useState("#home");
 
-  const { campusId, setCampus } = useCampus();
+  const { campusId, setCampus, campus } = useCampus();
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   // Active campus display name (guaranteed Aziz Nagar default)
-  const currentCampus = campusOptions.find((c) => c.id === campusId) || campusOptions[0];
+  const currentCampus =
+    campusOptions.find((c) => c.id === campusId || (c.id === "aziz-nagar" && (campusId as string) === "aziznagar")) ||
+    campusOptions[0];
 
   useEffect(() => {
     const onScroll = () => {

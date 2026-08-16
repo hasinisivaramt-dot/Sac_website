@@ -1,12 +1,14 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
 import heroCampus from "@/assets/hero-campus.jpg";
+import { useCampus } from "@/hooks/useCampus";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 
 const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
 
 export function HeroSection() {
+  const { campus } = useCampus();
   const prefersReducedMotion = useReducedMotion();
 
   const labelVariants: Variants = {
@@ -69,6 +71,13 @@ export function HeroSection() {
     },
   };
 
+  const heroImage = campus.hero?.image || heroCampus;
+  const eyebrowText = campus.hero?.eyebrow || "KL DEEMED TO BE UNIVERSITY";
+  const titleText = campus.hero?.title || "Student Activity Center";
+  const subtitleText =
+    campus.hero?.subtitle ||
+    "Empowering student leadership, creativity, and campus life beyond the classroom.";
+
   return (
     <section
       id="home"
@@ -76,8 +85,8 @@ export function HeroSection() {
     >
       {/* Background Image */}
       <img
-        src={heroCampus}
-        alt="KLH University Student Activity Center campus life"
+        src={heroImage}
+        alt={`${campus.name} Student Activity Center campus life`}
         width={1920}
         height={1080}
         className="absolute inset-0 -z-20 h-full w-full object-cover object-center"
@@ -105,7 +114,7 @@ export function HeroSection() {
               variants={labelVariants}
               className="text-xs font-black uppercase text-[#C99A3D]"
             >
-              KL DEEMED TO BE UNIVERSITY
+              {eyebrowText}
             </motion.span>
           </motion.div>
 
@@ -118,7 +127,7 @@ export function HeroSection() {
                 animate="visible"
                 className="font-display text-4xl sm:text-5xl md:text-6xl lg:text-[4.25rem] font-extrabold tracking-tight text-white leading-[1.05]"
               >
-                Student Activity Center
+                {titleText}
               </motion.h1>
             </div>
           </div>
@@ -134,8 +143,7 @@ export function HeroSection() {
               &ldquo;
             </span>
             <p className="leading-relaxed">
-              Empowering student leadership, creativity, and campus life beyond
-              the classroom.
+              {subtitleText}
             </p>
             <span className="text-[#C99A3D] text-2xl font-serif leading-none">
               &rdquo;

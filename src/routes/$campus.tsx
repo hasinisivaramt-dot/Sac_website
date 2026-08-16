@@ -29,9 +29,8 @@ function CampusPageRoute() {
   const { setCampus } = useCampus();
 
   useEffect(() => {
-    const normalized = campusParam === "aziz-nagar" ? "aziznagar" : campusParam;
-    if (normalized && (normalized === "aziznagar" || normalized === "bachupally" || normalized === "gbs")) {
-      setCampus(normalized as CampusId);
+    if (campusParam) {
+      setCampus(campusParam);
     }
   }, [campusParam, setCampus]);
 

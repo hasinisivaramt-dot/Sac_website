@@ -1,12 +1,14 @@
 import React from "react";
 import { ArrowRight, MapPin } from "lucide-react";
-import { events } from "@/lib/sac-data";
+import { useCampus } from "@/hooks/useCampus";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 
 const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
 
 export function EventsSection() {
+  const { campus } = useCampus();
   const prefersReducedMotion = useReducedMotion();
+  const displayEvents = campus.events || [];
 
   const lineVariants: Variants = {
     hidden: { scaleX: 0, opacity: 0 },
@@ -82,9 +84,9 @@ export function EventsSection() {
           </motion.p>
         </motion.div>
 
-        {/* 3 Event Cards Grid */}
+        {/* Event Cards Grid */}
         <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {events.map((event, idx) => (
+          {displayEvents.map((event, idx) => (
             <motion.div
               key={event.title}
               initial={{ opacity: 0, y: 30 }}

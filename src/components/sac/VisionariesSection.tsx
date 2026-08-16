@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
-import { visionaries } from "@/lib/sac-data";
+import { useCampus } from "@/hooks/useCampus";
+import type { Visionary } from "@/data/types";
 
 const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
 const EASE_OUT = [0.16, 1, 0.3, 1] as const;
@@ -13,7 +14,7 @@ function VisionaryProfileCard({
   person,
   index,
 }: {
-  person: (typeof visionaries)[number];
+  person: Visionary;
   index: number;
 }) {
   const prefersReducedMotion = useReducedMotion();
@@ -189,7 +190,9 @@ function VisionaryProfileCard({
 // ---------------------------------------------------------------------------
 
 export function VisionariesSection() {
+  const { campus } = useCampus();
   const prefersReducedMotion = useReducedMotion();
+  const displayVisionaries = campus.visionaries || [];
 
   // 1. Two Gold Decorative Lines (0.0s)
   const lineVariants: Variants = {
@@ -297,7 +300,7 @@ export function VisionariesSection() {
         </motion.div>
 
         {/* ================================================================= */}
-        {/* 2. FOUR LEADERSHIP PROFILES (Large-Scale Editorial Presentation)  */}
+        {/* 2. LEADERSHIP PROFILES (Large-Scale Editorial Presentation)       */}
         {/* ================================================================= */}
         <motion.div
           initial="hidden"
@@ -305,9 +308,9 @@ export function VisionariesSection() {
           viewport={{ once: true, amount: 0.2 }}
           className="mt-16 sm:mt-20 grid grid-cols-2 gap-8 sm:gap-10 lg:grid-cols-4 lg:gap-10 xl:gap-14"
         >
-          {visionaries.map((person, index) => (
+          {displayVisionaries.map((person, index) => (
             <VisionaryProfileCard
-              key={person.name}
+              key={`${person.name}-${index}`}
               person={person}
               index={index}
             />

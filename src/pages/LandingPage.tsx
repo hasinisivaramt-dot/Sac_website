@@ -1,24 +1,26 @@
 import React from "react";
-import { Navbar } from "@/components/sac/Navbar";
-import { HeroSection } from "@/components/sac/HeroSection";
-import { AboutSection } from "@/components/sac/AboutSection";
-import { VisionariesSection } from "@/components/sac/VisionariesSection";
-import { AchievementsSection } from "@/components/sac/AchievementsSection";
-import { StudentCouncilSection } from "@/components/sac/StudentCouncilSection";
-import { ImpactSection } from "@/components/sac/ImpactSection";
-import { ClubsSection } from "@/components/sac/ClubsSection";
-import { EventsSection } from "@/components/sac/EventsSection";
-import { CompetitionsSection } from "@/components/sac/CompetitionsSection";
-import { StudentVoicesSection } from "@/components/sac/StudentVoicesSection";
-import { GallerySection } from "@/components/sac/GallerySection";
-import { NoticeBoard } from "@/components/sac/NoticeBoard";
-import { Footer } from "@/components/sac/Footer";
-import { CampusSelectorModal } from "@/components/common/CampusSelector";
-
+import { Navbar, Footer } from "@/components/layout";
+import {
+  HeroSection,
+  AboutSection,
+  VisionariesSection,
+  AchievementsSection,
+  StudentCouncilSection,
+  ImpactSection,
+  ClubsSection,
+  EventsSection,
+  CompetitionsSection,
+  StudentVoicesSection,
+  GallerySection,
+  NoticeBoard,
+} from "@/components/sections";
+import { CampusSelectorModal } from "@/components/campus";
 import { motion, useScroll, useSpring } from "framer-motion";
 import { SmoothScrollProvider } from "@/components/common/SmoothScrollProvider";
+import { useCampus } from "@/hooks/useCampus";
 
 export function LandingPage() {
+  const { campusId } = useCampus();
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -26,55 +28,65 @@ export function LandingPage() {
     restDelta: 0.001,
   });
 
+  const isAzizNagar = campusId === "aziz-nagar" || (campusId as string) === "aziznagar";
+
   return (
     <SmoothScrollProvider>
       <div className="relative min-h-screen bg-white font-sans text-[#272329] antialiased selection:bg-[#C99A3D]/30 selection:text-[#6D0826]">
         {/* Subtle Top Scroll Progress Bar */}
-        <motion.div
-          className="fixed top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-[#6D0826] via-[#C99A3D] to-[#6D0826] z-50 origin-left pointer-events-none"
-          style={{ scaleX }}
-        />
+        {isAzizNagar && (
+          <motion.div
+            className="fixed top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-[#6D0826] via-[#C99A3D] to-[#6D0826] z-50 origin-left pointer-events-none"
+            style={{ scaleX }}
+          />
+        )}
 
         {/* 1. Navbar */}
         <Navbar />
 
         {/* Main Full-Width Standalone Vertical Flow */}
         <main id="main-content">
-          {/* 2. Hero Section */}
-          <HeroSection />
+          {isAzizNagar ? (
+            <>
+              {/* 2. Hero Section */}
+              <HeroSection />
 
-          {/* 3. About SAC */}
-          <AboutSection />
+              {/* 3. About SAC */}
+              <AboutSection />
 
-          {/* 4. Visionaries (Directly below About SAC) */}
-          <VisionariesSection />
+              {/* 4. Clubs */}
+              <ClubsSection />
 
-          {/* 5. Celebrating Student Excellence / Achievements */}
-          <AchievementsSection />
+              {/* 5. Events */}
+              <EventsSection />
 
-          {/* 6. Student Council */}
-          <StudentCouncilSection />
+              {/* 6. Competitions */}
+              <CompetitionsSection />
 
-          {/* 7. Animated Impact Banner */}
-          <ImpactSection />
+              {/* 7. Celebrating Student Excellence / Achievements */}
+              <AchievementsSection />
 
-          {/* 8. Clubs */}
-          <ClubsSection />
+              {/* 8. Visionaries */}
+              <VisionariesSection />
 
-          {/* 9. Events */}
-          <EventsSection />
+              {/* 9. Student Council */}
+              <StudentCouncilSection />
 
-          {/* 10. Competitions */}
-          <CompetitionsSection />
+              {/* 10. Animated Impact Banner */}
+              <ImpactSection />
 
-          {/* 11. Student Voices */}
-          <StudentVoicesSection />
+              {/* 11. Student Voices */}
+              <StudentVoicesSection />
 
-          {/* 12. Gallery */}
-          <GallerySection />
+              {/* 12. Gallery */}
+              <GallerySection />
 
-          {/* 13. Notice Board */}
-          <NoticeBoard />
+              {/* 13. Notice Board */}
+              <NoticeBoard />
+            </>
+          ) : (
+            <div className="min-h-[85vh] bg-white pt-24" />
+          )}
         </main>
 
         {/* 14. Footer */}
@@ -86,3 +98,4 @@ export function LandingPage() {
     </SmoothScrollProvider>
   );
 }
+

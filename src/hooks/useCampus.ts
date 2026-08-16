@@ -1,1 +1,1 @@
-export { useCampus, CampusProvider, type CampusId } from "@/context/CampusContext";
+export { useCampus, CampusProvider, type CampusId, type CampusData } from "@/context/CampusContext";

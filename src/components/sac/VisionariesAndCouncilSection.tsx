@@ -1,15 +1,18 @@
 import React from "react";
 import { ArrowRight } from "lucide-react";
-import { visionaries } from "@/lib/sac-data";
+import { useCampus } from "@/hooks/useCampus";
 import studentCouncilImg from "@/assets/student-council.jpg";
 import { motion } from "framer-motion";
 
 export function VisionariesAndCouncilSection() {
+  const { campus } = useCampus();
+  const displayVisionaries = campus.visionaries || [];
+
   return (
     <section id="visionaries-council" className="relative bg-white py-16 md:py-20 border-b border-[#EAE6DF]">
       <div className="section-shell">
         <div className="grid gap-12 lg:grid-cols-12">
-          {/* Left Column: Visionaries (KEEPING EXISTING AZIZ NAGAR VISIONARIES DATA) */}
+          {/* Left Column: Visionaries */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
@@ -29,11 +32,11 @@ export function VisionariesAndCouncilSection() {
                 Guiding. Inspiring. Leading.
               </p>
 
-              {/* 4 Visionary Cards with Circular Portraits */}
+              {/* Visionary Cards with Circular Portraits */}
               <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
-                {visionaries.map((vis, idx) => (
+                {displayVisionaries.map((vis, idx) => (
                   <motion.div
-                    key={vis.name}
+                    key={`${vis.name}-${idx}`}
                     initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
@@ -90,8 +93,8 @@ export function VisionariesAndCouncilSection() {
               {/* Council Photo */}
               <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl border border-slate-200 shadow-sm mt-3">
                 <img
-                  src={studentCouncilImg}
-                  alt="Student Council Members"
+                  src={campus.studentCouncil?.image || studentCouncilImg}
+                  alt={`${campus.name} Student Council Members`}
                   className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>

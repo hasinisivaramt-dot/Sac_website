@@ -1,12 +1,14 @@
 import React from "react";
-import { clubs } from "@/lib/sac-data";
 import { ClubCard } from "./ClubCard";
+import { useCampus } from "@/hooks/useCampus";
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 
 const EASE_PREMIUM = [0.22, 1, 0.36, 1] as const;
 
 export function ClubsSection() {
+  const { campus } = useCampus();
   const prefersReducedMotion = useReducedMotion();
+  const displayClubs = campus.clubs || [];
 
   const lineVariants: Variants = {
     hidden: { scaleX: 0, opacity: 0 },
@@ -85,11 +87,11 @@ export function ClubsSection() {
           </motion.p>
         </motion.div>
 
-        {/* 8 Club Cards */}
+        {/* Club Cards */}
         <div className="mt-10 grid grid-cols-2 gap-3.5 sm:grid-cols-4 lg:grid-cols-8">
-          {clubs.map((club, idx) => (
+          {displayClubs.map((club, idx) => (
             <motion.div
-              key={club.name}
+              key={`${club.name}-${idx}`}
               initial={{ opacity: 0, y: 25 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, amount: 0.2 }}
