@@ -1,0 +1,297 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * KLH Student Activity Center design system.
+ * Navy / burgundy / gold on warm ivory. All colors in oklch.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-burgundy: var(--burgundy);
+  --color-burgundy-deep: var(--burgundy-deep);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-ivory: var(--ivory);
+  --color-charcoal: var(--charcoal);
+}
+
+:root {
+  --radius: 0.875rem;
+
+  --navy: oklch(0.24 0.035 262);
+  --navy-deep: oklch(0.17 0.03 262);
+  --burgundy: oklch(0.33 0.13 15);
+  --burgundy-deep: oklch(0.24 0.11 15);
+  --gold: oklch(0.75 0.12 82);
+  --gold-soft: oklch(0.86 0.07 84);
+  --ivory: oklch(0.973 0.008 85);
+  --charcoal: oklch(0.24 0 0);
+
+  --background: oklch(0.973 0.008 85);
+  --foreground: oklch(0.24 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.24 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.24 0 0);
+  --primary: oklch(0.24 0.035 262);
+  --primary-foreground: oklch(0.98 0.01 85);
+  --secondary: oklch(0.33 0.13 15);
+  --secondary-foreground: oklch(0.98 0.01 85);
+  --muted: oklch(0.945 0.01 85);
+  --muted-foreground: oklch(0.52 0.008 80);
+  --accent: oklch(0.75 0.12 82);
+  --accent-foreground: oklch(0.2 0.03 262);
+  --destructive: oklch(0.55 0.2 27);
+  --destructive-foreground: oklch(0.98 0 0);
+  --border: oklch(0.9 0.012 85);
+  --input: oklch(0.9 0.012 85);
+  --ring: oklch(0.75 0.12 82);
+
+  --shadow-soft: 0 2px 8px -2px oklch(0.24 0.035 262 / 0.08);
+  --shadow-card: 0 18px 40px -24px oklch(0.24 0.035 262 / 0.35);
+  --shadow-lift: 0 30px 60px -28px oklch(0.24 0.035 262 / 0.45);
+  --gradient-gold: linear-gradient(100deg, var(--gold-soft), var(--gold));
+  --gradient-navy: linear-gradient(160deg, var(--navy), var(--navy-deep));
+  --gradient-burgundy: linear-gradient(120deg, var(--burgundy), var(--burgundy-deep));
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: clip;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@utility section-shell {
+  width: 100%;
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (min-width: 1024px) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility section-pad {
+  padding-block: 5rem;
+  @media (min-width: 768px) {
+    padding-block: 7rem;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+@utility gold-rule {
+  display: block;
+  height: 2px;
+  width: 4rem;
+  border-radius: 999px;
+  background: var(--gradient-gold);
+}
+
+@utility reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition:
+    opacity 0.7s var(--ease-premium),
+    transform 0.7s var(--ease-premium);
+  &[data-visible="true"] {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility card-lift {
+  transition:
+    transform 0.45s var(--ease-premium),
+    box-shadow 0.45s var(--ease-premium);
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+@utility btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.8rem 1.6rem;
+  transition:
+    transform 0.3s var(--ease-premium),
+    box-shadow 0.3s var(--ease-premium),
+    background-color 0.3s var(--ease-premium),
+    color 0.3s var(--ease-premium);
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@utility btn-gold {
+  background: var(--gradient-gold);
+  color: var(--navy-deep);
+  box-shadow: 0 12px 30px -14px var(--gold);
+}
+
+@utility btn-burgundy {
+  background: var(--gradient-burgundy);
+  color: var(--primary-foreground);
+  box-shadow: var(--shadow-card);
+}
+
+@utility btn-outline-gold {
+  border: 1px solid color-mix(in oklab, var(--gold) 65%, transparent);
+  color: var(--gold);
+  &:hover {
+    background: color-mix(in oklab, var(--gold) 14%, transparent);
+  }
+}
+
+@utility btn-outline-navy {
+  border: 1px solid color-mix(in oklab, var(--navy) 25%, transparent);
+  color: var(--navy);
+  &:hover {
+    background: color-mix(in oklab, var(--navy) 6%, transparent);
+  }
+}
+
+/* ---------- Clubs row hover interaction ---------- */
+.club-card {
+  transition:
+    transform 0.35s var(--ease-premium),
+    filter 0.35s var(--ease-premium),
+    opacity 0.35s var(--ease-premium),
+    box-shadow 0.35s var(--ease-premium),
+    border-color 0.35s var(--ease-premium);
+}
+.club-card-img {
+  transition:
+    transform 0.5s var(--ease-premium),
+    filter 0.35s var(--ease-premium);
+}
+.club-card-veil,
+.club-card-icon,
+.club-card-title,
+.club-card-rule {
+  transition:
+    transform 0.35s var(--ease-premium),
+    opacity 0.35s var(--ease-premium),
+    color 0.35s var(--ease-premium),
+    filter 0.35s var(--ease-premium);
+}
+
+.club-row:hover .club-card:not(:hover) {
+  opacity: 0.7;
+  filter: brightness(0.8);
+}
+
+.club-card:hover,
+.club-card:focus-visible {
+  transform: translateY(-8px) scale(1.06);
+  z-index: 2;
+  border-color: color-mix(in oklab, var(--gold) 70%, transparent);
+  box-shadow:
+    var(--shadow-lift),
+    0 0 0 1px color-mix(in oklab, var(--gold) 45%, transparent),
+    0 14px 40px -18px color-mix(in oklab, var(--gold) 60%, transparent);
+  outline: none;
+}
+.club-card:hover .club-card-img,
+.club-card:focus-visible .club-card-img {
+  transform: scale(1.08);
+  filter: brightness(1.12) saturate(1.15);
+}
+.club-card:hover .club-card-veil,
+.club-card:focus-visible .club-card-veil {
+  opacity: 0.9;
+}
+.club-card:hover .club-card-icon,
+.club-card:focus-visible .club-card-icon {
+  transform: translateY(-4px) scale(1.15);
+  filter: drop-shadow(0 0 8px color-mix(in oklab, var(--gold) 65%, transparent));
+}
+.club-card:hover .club-card-rule,
+.club-card:focus-visible .club-card-rule {
+  opacity: 1;
+}
+.club-card:hover .club-card-title,
+.club-card:focus-visible .club-card-title {
+  transform: translateY(-3px);
+  color: var(--primary-foreground);
+  font-size: 0.88rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .club-card,
+  .club-card-img,
+  .club-card-icon,
+  .club-card-title {
+    transition: none;
+  }
+  .club-card:hover {
+    transform: none;
+  }
+}

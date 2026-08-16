@@ -1,0 +1,400 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * KLH Student Activity Center design system.
+ * Navy / burgundy / gold on warm ivory. All colors in oklch.
+ */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-burgundy: var(--burgundy);
+  --color-burgundy-deep: var(--burgundy-deep);
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-ivory: var(--ivory);
+  --color-charcoal: var(--charcoal);
+}
+
+:root {
+  --radius: 0.875rem;
+
+  --navy: #1f2933;
+  --navy-deep: #17191d;
+  --burgundy: #650b25;
+  --burgundy-deep: #4a071b;
+  --gold: #c99a3d;
+  --gold-soft: #d9b771;
+  --ivory: #ffffff;
+  --charcoal: #1f2933;
+
+  --background: #ffffff;
+  --foreground: #1f2933;
+  --card: #ffffff;
+  --card-foreground: #1f2933;
+  --popover: #ffffff;
+  --popover-foreground: #1f2933;
+  --primary: #650b25;
+  --primary-foreground: #ffffff;
+  --secondary: #650b25;
+  --secondary-foreground: #ffffff;
+  --muted: #f7f8fa;
+  --muted-foreground: #5b6470;
+  --accent: #c99a3d;
+  --accent-foreground: #650b25;
+  --destructive: #9f1239;
+  --destructive-foreground: #ffffff;
+  --border: #e5e7eb;
+  --input: #f7f8fa;
+  --ring: #c99a3d;
+
+  --shadow-soft: 0 8px 24px -18px rgba(31, 41, 51, 0.18);
+  --shadow-card: 0 18px 40px -28px rgba(31, 41, 51, 0.18);
+  --shadow-lift: 0 26px 55px -28px rgba(31, 41, 51, 0.22);
+  --gradient-gold: linear-gradient(100deg, var(--gold-soft), var(--gold));
+  --gradient-navy: linear-gradient(160deg, var(--navy), var(--navy-deep));
+  --gradient-burgundy: linear-gradient(120deg, var(--burgundy), var(--burgundy-deep));
+  --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem;
+  }
+
+  body {
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+}
+
+@utility section-shell {
+  width: 100%;
+  max-width: 84rem;
+  margin-inline: auto;
+  padding-inline: 1.25rem;
+  @media (min-width: 1024px) {
+    padding-inline: 2.5rem;
+  }
+}
+
+@utility section-pad {
+  padding-block: 4rem;
+  @media (min-width: 768px) {
+    padding-block: 5.5rem;
+  }
+}
+
+@utility eyebrow {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+@utility gold-rule {
+  display: block;
+  height: 2px;
+  width: 4rem;
+  border-radius: 999px;
+  background: var(--gradient-gold);
+}
+
+/* ============================================================
+   SMOOTH SECTION SCROLL REVEAL SYSTEM
+   ============================================================ */
+
+.reveal {
+  opacity: 0;
+  will-change: opacity, transform, filter;
+  transition-property: opacity, transform, filter;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal-up {
+  transform: translate3d(0, 36px, 0);
+}
+
+.reveal-down {
+  transform: translate3d(0, -36px, 0);
+}
+
+.reveal-left {
+  transform: translate3d(-45px, 0, 0);
+}
+
+.reveal-right {
+  transform: translate3d(45px, 0, 0);
+}
+
+.reveal-scale {
+  transform: scale(0.92) translate3d(0, 24px, 0);
+}
+
+.reveal-blur {
+  transform: translate3d(0, 24px, 0);
+  filter: blur(10px);
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+  filter: blur(0px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+    transition: none !important;
+  }
+}
+
+@utility card-lift {
+  transition:
+    transform 0.45s var(--ease-premium),
+    box-shadow 0.45s var(--ease-premium);
+  &:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lift);
+  }
+}
+
+@utility btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.8rem 1.6rem;
+  transition:
+    transform 0.3s var(--ease-premium),
+    box-shadow 0.3s var(--ease-premium),
+    background-color 0.3s var(--ease-premium),
+    color 0.3s var(--ease-premium);
+  &:hover {
+    transform: translateY(-2px);
+  }
+}
+
+@utility btn-gold {
+  background: var(--gradient-gold);
+  color: var(--navy-deep);
+  box-shadow: 0 12px 28px -18px rgba(201, 154, 61, 0.7);
+}
+
+@utility btn-burgundy {
+  background: var(--gradient-burgundy);
+  color: var(--primary-foreground);
+  box-shadow: 0 12px 24px -18px rgba(101, 11, 37, 0.35);
+}
+
+@utility btn-outline-gold {
+  border: 1px solid rgba(101, 11, 37, 0.22);
+  color: var(--burgundy);
+  background: rgba(255, 255, 255, 0.8);
+  &:hover {
+    background: rgba(101, 11, 37, 0.04);
+  }
+}
+
+@utility btn-outline-navy {
+  border: 1px solid var(--border);
+  color: var(--navy);
+  background: #ffffff;
+  &:hover {
+    background: #f7f8fa;
+  }
+}
+
+/* ============================================================
+   CLUBS ROW — PREMIUM HOVER INTERACTION
+   ============================================================ */
+
+.club-card {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, filter, opacity;
+}
+
+.club-card-img {
+  transition:
+    transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform, filter;
+}
+
+.club-card-veil {
+  transition: opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.club-card-icon {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.club-card-title {
+  transition:
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    color 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    font-size 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  will-change: transform;
+}
+
+.club-card-rule {
+  transition:
+    opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.club-card-shimmer {
+  transition:
+    opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ---- Sibling dimming when any card is hovered ---- */
+.club-row:hover .club-card:not(:hover):not(:focus-visible) {
+  opacity: 0.68;
+  filter: brightness(0.78) saturate(0.85);
+}
+
+/* ---- Active (hovered) card ---- */
+.club-card:hover,
+.club-card:focus-visible {
+  transform: translateY(-8px) scale(1.06);
+  z-index: 10;
+  outline: none;
+  /* 1px gold border + outer gold glow */
+  border-color: color-mix(in oklab, var(--gold) 80%, transparent);
+  box-shadow:
+    /* lift shadow */
+    0 24px 56px -20px oklch(0.17 0.03 262 / 0.55),
+    /* tight gold ring */
+    0 0 0 1px color-mix(in oklab, var(--gold) 55%, transparent),
+    /* diffuse gold aura */
+    0 8px 40px -12px color-mix(in oklab, var(--gold) 55%, transparent),
+    /* upward gold glow */
+    0 -4px 20px -8px color-mix(in oklab, var(--gold) 30%, transparent);
+}
+
+/* Background image: zoom + brighten + saturate */
+.club-card:hover .club-card-img,
+.club-card:focus-visible .club-card-img {
+  transform: scale(1.09);
+  filter: brightness(1.14) saturate(1.18);
+}
+
+/* Gradient overlay: slightly heavier at bottom for legibility */
+.club-card:hover .club-card-veil,
+.club-card:focus-visible .club-card-veil {
+  opacity: 0.85;
+}
+
+/* Icon: lift up + larger + gold glow */
+.club-card:hover .club-card-icon,
+.club-card:focus-visible .club-card-icon {
+  transform: translateY(-5px) scale(1.2);
+  color: var(--gold);
+  filter: drop-shadow(0 0 6px color-mix(in oklab, var(--gold) 70%, transparent))
+          drop-shadow(0 0 12px color-mix(in oklab, var(--gold) 35%, transparent));
+}
+
+/* Gold rule: fade in */
+.club-card:hover .club-card-rule,
+.club-card:focus-visible .club-card-rule {
+  opacity: 1;
+  transform: scaleX(1.4);
+}
+
+/* Club title: lift up + full brightness */
+.club-card:hover .club-card-title,
+.club-card:focus-visible .club-card-title {
+  transform: translateY(-3px);
+  color: oklch(0.98 0.01 85);
+}
+
+/* Top shimmer accent line */
+.club-card:hover .club-card-shimmer,
+.club-card:focus-visible .club-card-shimmer {
+  opacity: 1;
+  transform: scaleX(1);
+}
+
+/* ---- Reduced motion fallback ---- */
+@media (prefers-reduced-motion: reduce) {
+  .club-card,
+  .club-card-img,
+  .club-card-icon,
+  .club-card-title,
+  .club-card-rule,
+  .club-card-shimmer {
+    transition: none;
+  }
+  .club-card:hover {
+    transform: none;
+  }
+  .club-row:hover .club-card:not(:hover) {
+    opacity: 1;
+    filter: none;
+  }
+}
